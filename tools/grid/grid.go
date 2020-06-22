@@ -1,4 +1,6 @@
-// Draw grid
+// Draw, slice, and prepare grid
+
+
 package main
 
 import "fmt"
@@ -31,10 +33,12 @@ func main() {
 
 	fmt.Println("Cell", cell1)
 
-	matrix := generateTiles(3, 3, 2)
+	matrix := generateTiles(3, 3, 1)
 	fmt.Println("Matirx", matrix)
 
-	sm = matrix[0]
+	sm := matrix[0]
 	fmt.Println("Slice 0", sm)
+
+	fmt.Println("Length Matrix - Matrix[0] - Matrix[1]", len(matrix), len(matrix[0]), len(matrix[0][0]))
 
 }
