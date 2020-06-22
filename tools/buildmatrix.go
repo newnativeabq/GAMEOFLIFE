@@ -1,4 +1,4 @@
-// Draw Spiral in Golang
+// Draw grid
 package main
 
 import "fmt"
@@ -33,5 +33,8 @@ func main() {
 
 	matrix := generateTiles(3, 3, 2)
 	fmt.Println("Matirx", matrix)
+
+	sm = matrix[0]
+	fmt.Println("Slice 0", sm)
 
 }
