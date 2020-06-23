@@ -100,16 +100,28 @@ class Board():
         for z in layers:
             for y in range(self.my):
                 for x in range(self.mx):
-                    func(self.mat[z][y][x])
+                    func(self.mat[z][y][x], coord=(x,y,z))
 
 
 
     def advance(self, layers=None):
-        def _advance_cell(cell):
+        def _advance_cell(cell, **kwargs):
             cell.advance()
 
         self.iterfunc(_advance_cell, layers)
-        
+    
+
+
+    def _get_cell(self, coord):
+        x, y, z = coord
+        return self.mat[z][y][x]
+
+
+
+    def set_cell_value(self, coord, value):
+        cell = self._get_cell(coord)
+        cell.val = value
+
 
 
     @property
@@ -120,6 +132,7 @@ class Board():
                 for x in range(self.mx):
                     temp[z][y][x] = self.mat[z][y][x].val
         return temp
+
 
     
     @property
