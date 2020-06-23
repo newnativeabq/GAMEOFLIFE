@@ -12,6 +12,8 @@ class Cell():
     def __init__(self, val=0, ngb=0, rand=False):
         if rand:
             self.val = random.randint(0,1)
+        else:
+            self.val = 0
         self.ngb = 0
 
     def __str__(self):

@@ -1,7 +1,7 @@
 import mechanics 
 from mechanics import initializeGame
 
-board = buildMatrix(5,5,2)
+board = initializeGame()
 
 if __name__ == "__main__":
-    print(board)
+    print(board.values)
