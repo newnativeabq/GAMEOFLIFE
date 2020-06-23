@@ -3,14 +3,15 @@ Grid Mechanics
 """
 
 import numpy as np
-
+import random
 
 
 
 
 class Cell():
-    def __init__(self, val=0, ngb=0):
-        self.val = 0
+    def __init__(self, val=0, ngb=0, rand=False):
+        if rand:
+            self.val = random.randint(0,1)
         self.ngb = 0
 
     def __str__(self):
@@ -25,11 +26,11 @@ class Cell():
 
 
 
-class ConvolveSqure():
+class ConvolveSquare():
     def __init__(self, base_matrix):
-        self.m = np.full_like(m[0], fill_value=False)
-        self.mx = len(m[0])
-        self.my = len(m)
+        self.mat = np.full_like(base_matrix[0], fill_value=False)
+        self.mx = len(base_matrix[0][0])
+        self.my = len(base_matrix[0])
         self.igrid = np.array([
             [-1, 1], [0, 1], [1, 1],
             [-1, 0], [0, 0], [1, 0],
@@ -38,21 +39,27 @@ class ConvolveSqure():
     
 
     def _return_valid_coord(self, coord):
-        if coord[0] >= 0 and coord[0] <= self.mx:
-            if coord[1] >=0 and coord[1] <= self.my:
+        # print(f'test valid {coord} vs ({self.mx}, {self.my})')
+        if coord[0] >= 0 and coord[0] < self.mx:
+            if coord[1] >= 0 and coord[1] < self.my:
+                # print('Valid')
                 return coord 
+        # print('Not Valid')
         return None
 
 
 
     def _build_indices(self, x, y):
+        # print(f'index for {x} {y}; ')
+        tcoord = np.array([x, y])
         return [
-            self._return_valid_coord((x+c[0], y+c[1])) for c in self.igrid
+            self._return_valid_coord(tcoord + icoord) for icoord in self.igrid
         ]
 
 
+
     def _build_indexer(self, indexes, origin=None):
-        mask = self.m.copy()
+        mask = self.mat.copy()
         for dex in indexes:
             if dex is not None:
                 x = dex[0]
@@ -65,11 +72,62 @@ class ConvolveSqure():
         return mask.astype(bool)
 
 
+
     def __call__(self, x, y, vals=None):
         indexes = self._build_indices(x, y)
         indexer = self._build_indexer(indexes, origin=(x,y))
         return indexer
 
+
+
+
+class Board():
+    def __init__(self, x:int, y:int, z:int):
+        self.mat = buildMatrix(x, y, z)
+        self.mx = x
+        self.my = y
+        self.mz = z
+        self.zeros = np.zeros_like(self.mat)
+
+
+
+    def iterfunc(self, func, layers:list=None):
+        if layers is None:
+            layers = range(self.mz)
+
+        for z in layers:
+            for y in range(self.my):
+                for x in range(self.mx):
+                    func(self.mat[z][y][x])
+
+
+
+    def advance(self, layers=None):
+        def _advance_cell(cell):
+            cell.advance()
+
+        self.iterfunc(_advance_cell, layers)
+        
+
+
+    @property
+    def values(self):
+        temp = self.zeros.copy()
+        for z in range(self.mz):
+            for y in range(self.my):
+                for x in range(self.mx):
+                    temp[z][y][x] = self.mat[z][y][x].val
+        return temp
+
+    
+    @property
+    def neighbors(self):
+        temp = self.zeros.copy()
+        for z in range(self.mz):
+            for y in range(self.my):
+                for x in range(self.mx):
+                    temp[z][y][x] = self.mat[z][y][x].ngb
+        return temp
 
 
 
@@ -102,7 +160,7 @@ def sliceMatrix(m: list, z) -> list:
 
 
 
-def _list_coords(arr):
+def list_coords(arr):
     coords = []
     xs = np.arange(len(arr[0]))
     for j in range(len(arr)):
@@ -114,22 +172,36 @@ def _list_coords(arr):
 
 
 
-def count_neighbors(m: list):
-    # flatten slice
-    mz = sliceMatrix(m, 0)
-    coords = _list_coords(mz)
-    # build indexer
+def count_neighbors(arr: list, ck):
+    coords = list_coords(arr)
+    for coord in coords:
+        x = coord[0]
+        y = coord[1]
+        cell = arr[y][x]
+        cell.ngb = sum(
+            [c.val for c in arr[ck(x,y)]]
+        )
 
     return coords
 
 
 
 
-if __name__ == "__main__":
-    m = buildMatrix(3, 3, 2)
+# if __name__ == "__main__":
+#     board = Board(5,5,2)
+#     m = board.mat
 
-    ck = ConvolveSqure(m)
+#     ck = ConvolveSquare(m)
 
-    print(m[0][ck(0,2)])
+#     # print('ck', ck(0,2))
 
-    # print(count_neighbors(m))
+#     count_neighbors(m[0], ck)
+#     # count_neighbors(m[1], ck)
+
+#     print('values')
+#     print(board.values[0])
+#     print('neighbors')
+#     print(board.neighbors[0])
+#     board.advance(layers=[0])
+#     print(board.values[0])
+
