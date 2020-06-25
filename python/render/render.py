@@ -54,7 +54,8 @@ class BoardGrid(GridLayout):
             cell.background_color = self.cell_colors[vals[i]]
 
 
-    def advance_game(self):
+    def advance_game(self, dt):
+        Logger.debug(f'STATUS: Advancing: Board Values - {self.board.values}')
         step(self.board, layers=None)
         self.draw_cell_color()
 
@@ -74,6 +75,7 @@ class GameApp(App):
     def build(self):
         board = BoardGrid(cols=self.boardsize)
         board.draw_cell_color()
+        Clock.schedule_interval(board.advance_game, 60.0/60.0)
         return board
 
 
