@@ -6,23 +6,13 @@ Game Of Life
 """
 
 
-
-from render import GameApp
-
-
-import logging 
 import os
 
-logpath = os.path.join(
-    os.getcwd(), 'game.log'
-)
+os.environ['KIVY_HOME'] = os.path.join(os.getcwd())
+
+from render import GameApp, Logger
+
+Logger.info('Status: Game Started')
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        filename=logpath,
-        level = logging.DEBUG
-    )
-    rootlogger = logging.getLogger(__name__)
-    rootlogger.info('Game Started')
-    print('log check')
-    # GameApp().run()
+    GameApp().run()

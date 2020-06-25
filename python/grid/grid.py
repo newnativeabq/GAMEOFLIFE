@@ -84,8 +84,8 @@ class ConvolveSquare():
 
 
 class Board():
-    def __init__(self, x:int, y:int, z:int):
-        self.mat = buildMatrix(x, y, z)
+    def __init__(self, x:int, y:int, z:int, rand=False):
+        self.mat = buildMatrix(x, y, z, rand)
         self.mx = x
         self.my = y
         self.mz = z
@@ -151,12 +151,12 @@ class Board():
 
 
 
-def buildMatrix(x: int, y: int, z:int) -> list:
+def buildMatrix(x: int, y: int, z:int, rand=False) -> list:
     def _build_z():
         return np.array([_build_board() for _ in range(z)])
     
     def _build_row():
-        return np.array([Cell() for _ in range(x)])
+        return np.array([Cell(rand) for _ in range(x)])
 
     def _build_board():
         return np.array([_build_row() for _ in range(y)])
