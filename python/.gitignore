@@ -1,0 +1,7 @@
+# Python Module caches
+*__pycache__
+*pyc
+
+
+# Log Files
+*.txt
