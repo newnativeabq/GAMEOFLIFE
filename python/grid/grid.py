@@ -149,6 +149,8 @@ class Board():
 
 
 
+
+
 def buildMatrix(x: int, y: int, z:int) -> list:
     def _build_z():
         return np.array([_build_board() for _ in range(z)])
