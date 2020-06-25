@@ -7,8 +7,22 @@ Game Of Life
 
 
 
-from mechanics import GameApp
+from render import GameApp
 
+
+import logging 
+import os
+
+logpath = os.path.join(
+    os.getcwd(), 'game.log'
+)
 
 if __name__ == "__main__":
-    GameApp().run()
+    logging.basicConfig(
+        filename=logpath,
+        level = logging.DEBUG
+    )
+    rootlogger = logging.getLogger(__name__)
+    rootlogger.info('Game Started')
+    print('log check')
+    # GameApp().run()
