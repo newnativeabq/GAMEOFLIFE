@@ -9,7 +9,7 @@ import random
 
 
 class Cell():
-    def __init__(self, val=0, ngb=0, rand=False):
+    def __init__(self, val=0, ngb=0, rand=True):
         if rand:
             self.val = random.randint(0,1)
         else:
@@ -84,11 +84,15 @@ class ConvolveSquare():
 
 
 class Board():
-    def __init__(self, x:int, y:int, z:int):
-        self.mat = buildMatrix(x, y, z)
+    def __init__(self, x:int, y:int, z:int, rand=False):
+        self.mat = buildMatrix(x, y, z, rand)
+        self.ck = ConvolveSquare(self.mat)
+        self.analyze_board()
+
         self.mx = x
         self.my = y
         self.mz = z
+
         self.zeros = np.zeros_like(self.mat)
 
 
@@ -103,12 +107,17 @@ class Board():
                     func(self.mat[z][y][x], coord=(x,y,z))
 
 
+    def analyze_board(self, layers=None):
+        if layers is None:
+            count_neighbors(arr=self.mat[0], ck=self.ck)
+
 
     def advance(self, layers=None):
         def _advance_cell(cell, **kwargs):
             cell.advance()
 
         self.iterfunc(_advance_cell, layers)
+        self.analyze_board()
     
 
 
@@ -149,12 +158,14 @@ class Board():
 
 
 
-def buildMatrix(x: int, y: int, z:int) -> list:
+
+
+def buildMatrix(x: int, y: int, z:int, rand=False) -> list:
     def _build_z():
         return np.array([_build_board() for _ in range(z)])
     
     def _build_row():
-        return np.array([Cell() for _ in range(x)])
+        return np.array([Cell(rand) for _ in range(x)])
 
     def _build_board():
         return np.array([_build_row() for _ in range(y)])
