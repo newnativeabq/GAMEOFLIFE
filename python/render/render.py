@@ -64,13 +64,8 @@ class BoardGrid(GridLayout):
 
 class GameApp(App):
     def __init__(self, **kwargs):
-
-
         super(GameApp, self).__init__(**kwargs)
-        if 'boardsize' in kwargs:
-            self.boardsize = kwargs['boardsize']
-        else:
-            self.boardsize = 5
+        self.boardsize = 25
 
     def build(self):
         board = BoardGrid(cols=self.boardsize)

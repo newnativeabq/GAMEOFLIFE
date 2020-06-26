@@ -15,4 +15,5 @@ from render import GameApp, Logger
 Logger.info('Status: Game Started')
 
 if __name__ == "__main__":
-    GameApp().run()
+    app = GameApp()
+    app.run()
