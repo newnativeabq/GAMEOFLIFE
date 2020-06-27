@@ -55,7 +55,7 @@ class BoardGrid(GridLayout):
 
     def _build_cell_button(self, text:str = None):
         newBtn = Button(
-            text = text,
+            text = '',
             id = text,
         )
         newBtn.bind(on_press = self._update_cell)
@@ -110,7 +110,7 @@ class GameApp(App):
     def __init__(self, **kwargs):
         super(GameApp, self).__init__(**kwargs)
         self.title = 'Game of Life'
-        self.boardsize = 10
+        self.boardsize = 25
         self.epoch = 0
         self.board = initializeBoard(self.boardsize)
         self.header = self._draw_header(
@@ -181,6 +181,7 @@ class GameApp(App):
         Logger.info(f'Rate now: {self.rate}')
         self.start()
 
+
     def _decrease_rate(self, *args, **kwargs):
         self.rate *= 1.75
         Logger.info(f'Rate now: {self.rate}')
@@ -193,10 +194,12 @@ class GameApp(App):
         Clock.unschedule(self._step)
         Clock.schedule_interval(self._step, self.rate)
 
+
     def stop(self):
         self.startBtn.text = 'Start'
         self.active = False
         Clock.unschedule(self._step)
+
 
     def _update_control_button(self, *args, **kwargs):
         if self.active:
