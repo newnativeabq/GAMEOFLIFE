@@ -24,9 +24,12 @@ class ActiveBuffer(Buffer):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.actions = []
+        self.actions = {}
 
     def bind(self, func, **kwargs):
-        self.actions.append(
-            Action(func=func, **kwargs)
+        self.actions.update(
+            {func.__name__:Action(func=func, **kwargs)}
             )
+
+    def start(self):
+        pass
