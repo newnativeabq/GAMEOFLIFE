@@ -9,7 +9,7 @@ import random
 
 
 class Cell():
-    def __init__(self, val=0, ngb=0, rand=True):
+    def __init__(self, val=0, ngb=0, rand=False):
         if rand:
             self.val = random.randint(0,1)
         else:
@@ -142,7 +142,8 @@ class Board():
 
     
     def zero_board(self):
-        self.mat = self.zeros.copy()
+        self.mat = buildMatrix(self.mx, self.my, self.mz, rand=False)
+        self.analyze_board()
 
 
 

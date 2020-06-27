@@ -94,8 +94,9 @@ class BoardGrid(GridLayout):
         self.draw_cell_color()
 
 
-    def clear_board(self):
+    def clear_board(self, *args, **kwargs):
         self.board.zero_board()
+        self.draw_cell_color()
 
 
 
@@ -133,12 +134,19 @@ class GameApp(App):
             on_press = self._update_control_button
         )
 
+        self.resetBtn = Button(
+            text = "Reset",
+            size_hint = (1, 1),
+            on_press = self._clear_board
+        )
+
         self.counter = Label(
             text = f'Epoch {self.epoch}',
             size_hint = (1, 1)
         )
 
         header.add_widget(self.startBtn)
+        header.add_widget(self.resetBtn)
         header.add_widget(self.counter)
         return header
 
@@ -147,7 +155,10 @@ class GameApp(App):
         self.counter.text = f'Epoch {self.epoch}'
 
 
-    
+    def _clear_board(self, *args, **kwargs):
+        self.board.clear_board()
+
+
     def start(self):
         self.startBtn.text = 'Stop'
         self.active = True
@@ -159,7 +170,7 @@ class GameApp(App):
         self.active = False
         Clock.unschedule(self._step)
 
-    def _update_control_button(self, dt):
+    def _update_control_button(self, *args, **kwargs):
         if self.active:
             self.stop()
         else:
@@ -171,9 +182,6 @@ class GameApp(App):
         
         gameWindow.add_widget(self.header)
         gameWindow.add_widget(self.board)
-
-        # Clock.schedule_interval(self._step, self.rate)
-        # self.start()
 
         return gameWindow
 
