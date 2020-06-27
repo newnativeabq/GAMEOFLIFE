@@ -24,6 +24,10 @@ from kivy.clock import Clock
 
 
 
+
+
+
+
 class BoardGrid(GridLayout):
 
     def __init__(self, **kwargs):
@@ -90,16 +94,13 @@ class BoardGrid(GridLayout):
         self.draw_cell_color()
 
 
+    def clear_board(self):
+        self.board.zero_board()
 
 
 
 
 
-
-def initializeBoard(cols):
-    board = BoardGrid(cols=cols)
-    board.draw_cell_color()
-    return board
 
 
 
@@ -177,6 +178,14 @@ class GameApp(App):
         return gameWindow
 
 
+
+
+### Helper Functions ###
+
+def initializeBoard(cols):
+    board = BoardGrid(cols=cols)
+    board.draw_cell_color()
+    return board
 
 
 if __name__ == "__main__":

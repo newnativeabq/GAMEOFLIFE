@@ -140,6 +140,11 @@ class Board():
         cell.val = value
 
 
+    
+    def zero_board(self):
+        self.mat = self.zeros.copy()
+
+
 
     @property
     def values(self):
