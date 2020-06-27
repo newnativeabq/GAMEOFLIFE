@@ -5,11 +5,7 @@ Buffer
 
 
 from queue import Queue
-# from multiprocessing import Process, Queue
-
-
-
-
+from multiprocessing import Process
 
 
 def _set_value(key:str, lookup:dict, default):
@@ -64,5 +60,6 @@ class Buffer():
     @property
     def size(self):
         return self.q.qsize()
+
 
 
