@@ -6,16 +6,16 @@ Active Buffer
 
 from .buffer import Buffer
 
+from functools import partial
 from multiprocessing import Process
 
 
 class Action():
     def __init__(self, func, **kwargs):
-        self.func = func 
-        self.kwargs = kwargs
+        self.func = partial(func, **kwargs)
     
-    def __call__(self):
-        return self.func(**self.kwargs)
+    def __call__(self, **kwargs):
+        return self.func(**kwargs)
 
 
 
@@ -31,5 +31,7 @@ class ActiveBuffer(Buffer):
             {func.__name__:Action(func=func, **kwargs)}
             )
 
-    def start(self):
-        pass
+    def run(self, name, **kwargs):
+        p = Process(target=self.actions[name], kwargs=kwargs)
+        p.start()
+        p.join()

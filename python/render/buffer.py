@@ -4,8 +4,8 @@ Buffer
 """
 
 
-from queue import Queue
-from multiprocessing import Process
+# from queue import Queue
+from multiprocessing import Process, Queue
 
 
 def _set_value(key:str, lookup:dict, default):
@@ -37,7 +37,7 @@ class Reader():
 
 class Buffer():
     def __init__(self, *args, **kwargs):
-        self.q, self.w, self.r = self._build_queue_stack()
+        self.q, self.write, self.read = self._build_queue_stack()
 
     def _build_queue_stack(self):
         newQ = Queue()
@@ -45,16 +45,16 @@ class Buffer():
 
 
     def put(self, package):
-        self.w(package)
+        self.write(package)
 
 
     def get(self):
-        return self.r()
+        return self.read()
 
 
     def teardown(self):
         del self.q 
-        self.q, self.w, self.r = self._build_queue_stack()
+        self.q, self.write, self.read = self._build_queue_stack()
 
 
     @property
