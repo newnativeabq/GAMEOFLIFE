@@ -24,6 +24,10 @@ from kivy.clock import Clock
 
 
 
+
+
+
+
 class BoardGrid(GridLayout):
 
     def __init__(self, **kwargs):
@@ -39,32 +43,64 @@ class BoardGrid(GridLayout):
         self.board = initializeGame(board_size=[blen, blen, 2])
 
         self.cells = []
-        for i in range(blen**2):
-            newcell = Button(text=f'{i}')
-            self.cells.append(newcell)
-            super().add_widget(newcell)
+        for i in range(blen):
+            for j in range(blen):
+                newcell = self._build_cell_button(text=f'{j},{i}')
+                self.cells.append(newcell)
+                super().add_widget(newcell)
 
-        Logger.info(f'STATUS: Created widget type {type(self.cells)} of size {len(self.cells)}')
+        Logger.debug(f'STATUS: Created widget type {type(self.cells)} of size {len(self.cells)}')
+
+
+    def _build_cell_button(self, text:str = None):
+        newBtn = Button(
+            text = text,
+            id = text,
+        )
+        newBtn.bind(on_press = self._update_cell)
+        return newBtn
+
+
+    def _update_cell(self, instance):
+        def _get_instance_index(instance):
+            index = instance.id.split(',')
+            return tuple(int(i) for i in index)
+
+        def _flip_board_value(index):
+            bcell = self.board._get_cell(coord=index)
+            self.board.set_cell_value(index, int(not bcell.val))
+            return bcell.val
+
+        def _update_cell_color(instance, val):
+            instance.background_color = self.cell_colors[val]
+
+        index = _get_instance_index(instance)
+        newVal = _flip_board_value(index)
+        _update_cell_color(instance, newVal)
+        self.board.analyze_board()
 
 
     def draw_cell_color(self):
         vals = self.board.values[0].flatten()
-        Logger.debug(f'STATUS: Board Values - {vals}')
+        # Logger.debug(f'STATUS: Board Values - {vals}')
 
         for i, cell in enumerate(self.cells):
             cell.background_color = self.cell_colors[vals[i]]
 
 
     def advance_game(self, dt):
-        Logger.debug(f'STATUS: Advancing: Board Values - {self.board.values}')
+        # Logger.debug(f'STATUS: Advancing: Board Values - {self.board.values[0]}')
         step(self.board, layers=None)
         self.draw_cell_color()
 
 
-def initializeBoard(cols):
-    board = BoardGrid(cols=cols)
-    board.draw_cell_color()
-    return board
+    def clear_board(self):
+        self.board.zero_board()
+
+
+
+
+
 
 
 
@@ -142,6 +178,14 @@ class GameApp(App):
         return gameWindow
 
 
+
+
+### Helper Functions ###
+
+def initializeBoard(cols):
+    board = BoardGrid(cols=cols)
+    board.draw_cell_color()
+    return board
 
 
 if __name__ == "__main__":

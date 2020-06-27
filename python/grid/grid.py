@@ -122,7 +122,15 @@ class Board():
 
 
     def _get_cell(self, coord):
-        x, y, z = coord
+        if len(coord) == 3:
+            x, y, z = coord
+        elif len(coord) == 2:
+            x, y = coord 
+            z = 0
+        elif len(coord) == 1:
+            x = y = coord[0]
+            z = 0
+        
         return self.mat[z][y][x]
 
 
@@ -130,6 +138,11 @@ class Board():
     def set_cell_value(self, coord, value):
         cell = self._get_cell(coord)
         cell.val = value
+
+
+    
+    def zero_board(self):
+        self.mat = self.zeros.copy()
 
 
 
@@ -207,8 +220,6 @@ def count_neighbors(arr: list, ck):
         cell.ngb = sum(
             [c.val for c in arr[ck(x,y)]]
         )
-
-    return coords
 
 
 
