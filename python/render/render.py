@@ -11,6 +11,7 @@ from kivy.uix.boxlayout import BoxLayout
 
 from kivy.uix.label import Label
 from kivy.uix.button import Button
+from kivy.uix.textinput import TextInput
 from kivy.properties import ObjectProperty
 
 from mechanics import (
@@ -140,6 +141,19 @@ class GameApp(App):
             on_press = self._clear_board
         )
 
+        self.speedUp = Button(
+            text = "+",
+            size_hint = (0.5, 1),
+            on_press = self._increase_rate
+        )
+
+
+        self.speedDown = Button(
+            text = "-",
+            size_hint = (0.5, 1),
+            on_press = self._decrease_rate
+        )
+
         self.counter = Label(
             text = f'Epoch {self.epoch}',
             size_hint = (1, 1)
@@ -147,7 +161,10 @@ class GameApp(App):
 
         header.add_widget(self.startBtn)
         header.add_widget(self.resetBtn)
+        header.add_widget(self.speedUp)
+        header.add_widget(self.speedDown)
         header.add_widget(self.counter)
+        
         return header
 
 
@@ -157,6 +174,17 @@ class GameApp(App):
 
     def _clear_board(self, *args, **kwargs):
         self.board.clear_board()
+
+
+    def _increase_rate(self, *args, **kwargs):
+        self.rate *= 0.75
+        Logger.info(f'Rate now: {self.rate}')
+        self.start()
+
+    def _decrease_rate(self, *args, **kwargs):
+        self.rate *= 1.75
+        Logger.info(f'Rate now: {self.rate}')
+        self.start()
 
 
     def start(self):
